@@ -12,7 +12,6 @@ Datasets used:
 - SONICS (real + fake)
 
 ## What This Repo Includes
-=======
 Reproducible out-of-domain benchmark pipeline for evaluating Deezer’s deepfake detector and SONICS SpecTTTra models on FMA, FakeMusicCaps, and SONICS with leakage-safe validation splits, standardized manifests, and confusion-matrix reporting.
 
 ## What This Folder Includes
@@ -72,8 +71,6 @@ The scripts assume this layout under your workspace root:
     ├── plot_confusion_matrices.py
     ├── final_ood_comparison.csv
     └── confusion/
-<<<<<<< HEAD
-=======
 ```
 
 ---
