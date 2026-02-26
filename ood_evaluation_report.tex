@@ -1,0 +1,291 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{caption}
+\captionsetup{font=small}
+\title{Out-of-Domain Deepfake Audio Evaluation Report}
+\author{Generated from experiment artifacts}
+\date{\today}
+\begin{document}
+\maketitle
+\section{Scope}
+This report summarizes out-of-domain (OOD) evaluation results from \texttt{final\_ood\_comparison.csv} and the generated confusion matrices.
+All numeric values in this report are taken directly from the experiment output CSV; no values are manually edited.
+\section{Split Construction and Leakage Control}
+Splits were generated with \texttt{ood\_eval/build\_balanced\_ood\_splits.py}. The split policy used validation data for model-specific sources to avoid train-test leakage:
+\begin{itemize}
+\item \textbf{FMA real/fake}: sampled from Deezer validation split (\texttt{dataset\_medium\_split\_filtered.npy}, key \texttt{validation}).
+\item \textbf{FMA fake encoder fairness}: fake samples were stratified across \texttt{encodec3, encodec6, encodec24, griffin256, griffin512, lac14, lac2, lac7, musika}.
+\item \textbf{SONICS real/fake}: sampled from \texttt{SONICS/valid.csv}. Entries overlapping \texttt{SONICS/train.csv} are excluded.
+\item \textbf{FakeMusicCaps fake}: sampled from the FakeMusicCaps pool.
+\end{itemize}
+\section{Evaluation Orchestration}
+\begin{itemize}
+\item \textbf{Deezer model}: evaluated with \texttt{deepfake-detector/scripts/eval\_manifest.py}, aligned to the original \texttt{eval.py} pipeline (configuration loading, preprocessing, architecture, weights).
+\item \textbf{SONICS models}: evaluated with \texttt{sonics/benchmark\_pretrained.py} using the same CSV manifests.
+\item \textbf{Metric consolidation}: confusion terms (TP, TN, FP, FN) and derived metrics were consolidated in \texttt{ood\_eval/final\_ood\_comparison.csv}.
+\end{itemize}
+\section{Evaluated Datasets and Models}
+Datasets used in this report:
+\begin{itemize}
+\item \texttt{fakemusiccaps\_fake\_2000}: 2000 samples
+\item \texttt{fakemusiccaps\_fake\_valid\_2000}: 2000 samples
+\item \texttt{fma\_fake\_valid\_2000}: 2000 samples
+\item \texttt{fma\_real\_valid\_2000}: 2000 samples
+\item \texttt{sonics\_fake\_valid\_2000}: 2000 samples
+\item \texttt{sonics\_real\_valid\_1243}: 1243 samples
+\end{itemize}
+Models used in this report:
+\begin{itemize}
+\item \texttt{awsaf49/sonics-spectttra-alpha-120s}
+\item \texttt{awsaf49/sonics-spectttra-alpha-5s}
+\item \texttt{awsaf49/sonics-spectttra-beta-120s}
+\item \texttt{awsaf49/sonics-spectttra-beta-5s}
+\item \texttt{awsaf49/sonics-spectttra-gamma-120s}
+\item \texttt{awsaf49/sonics-spectttra-gamma-5s}
+\item \texttt{Deezer-specnn\_amplitude}
+\end{itemize}
+\section{Results Table}
+\small
+\begin{longtable}{p{3.5cm}p{3.0cm}rrrrrrrrrr}
+\toprule
+Model & Dataset & N & TP & TN & FP & FN & Acc & Prec\_fake & Rec\_fake & Spec\_real & BalAcc \\
+\midrule
+\endfirsthead
+\toprule
+Model & Dataset & N & TP & TN & FP & FN & Acc & Prec\_fake & Rec\_fake & Spec\_real & BalAcc \\
+\midrule
+\endhead
+\texttt{awsaf49/sonics-spectttra-alpha-120s} & \texttt{fakemusiccaps\_fake\_2000} & 2000 & 748 & 0 & 0 & 1252 & 0.3740 & 1.0000 & 0.3740 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-5s} & \texttt{fakemusiccaps\_fake\_2000} & 2000 & 252 & 0 & 0 & 1748 & 0.1260 & 1.0000 & 0.1260 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-120s} & \texttt{fakemusiccaps\_fake\_2000} & 2000 & 63 & 0 & 0 & 1937 & 0.0315 & 1.0000 & 0.0315 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-5s} & \texttt{fakemusiccaps\_fake\_2000} & 2000 & 148 & 0 & 0 & 1852 & 0.0740 & 1.0000 & 0.0740 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-120s} & \texttt{fakemusiccaps\_fake\_2000} & 2000 & 839 & 0 & 0 & 1161 & 0.4195 & 1.0000 & 0.4195 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-5s} & \texttt{fakemusiccaps\_fake\_2000} & 2000 & 187 & 0 & 0 & 1813 & 0.0935 & 1.0000 & 0.0935 & NaN & NaN \\
+\texttt{Deezer-specnn\_amplitude} & \texttt{fakemusiccaps\_fake\_valid\_2000} & 2000 & 216 & 0 & 0 & 1784 & 0.1080 & 1.0000 & 0.1080 & NaN & NaN \\
+\texttt{Deezer-specnn\_amplitude} & \texttt{fma\_fake\_valid\_2000} & 2000 & 1997 & 0 & 0 & 3 & 0.9985 & 1.0000 & 0.9985 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-120s} & \texttt{fma\_fake\_valid\_2000} & 2000 & 142 & 0 & 0 & 1858 & 0.0710 & 1.0000 & 0.0710 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-5s} & \texttt{fma\_fake\_valid\_2000} & 2000 & 74 & 0 & 0 & 1926 & 0.0370 & 1.0000 & 0.0370 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-120s} & \texttt{fma\_fake\_valid\_2000} & 2000 & 16 & 0 & 0 & 1984 & 0.0080 & 1.0000 & 0.0080 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-5s} & \texttt{fma\_fake\_valid\_2000} & 2000 & 65 & 0 & 0 & 1935 & 0.0325 & 1.0000 & 0.0325 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-120s} & \texttt{fma\_fake\_valid\_2000} & 2000 & 78 & 0 & 0 & 1922 & 0.0390 & 1.0000 & 0.0390 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-5s} & \texttt{fma\_fake\_valid\_2000} & 2000 & 74 & 0 & 0 & 1926 & 0.0370 & 1.0000 & 0.0370 & NaN & NaN \\
+\texttt{Deezer-specnn\_amplitude} & \texttt{fma\_real\_valid\_2000} & 2000 & 0 & 1998 & 2 & 0 & 0.9990 & 0.0000 & NaN & 0.9990 & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-120s} & \texttt{fma\_real\_valid\_2000} & 2000 & 0 & 1915 & 85 & 0 & 0.9575 & 0.0000 & NaN & 0.9575 & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-5s} & \texttt{fma\_real\_valid\_2000} & 2000 & 0 & 1937 & 63 & 0 & 0.9685 & 0.0000 & NaN & 0.9685 & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-120s} & \texttt{fma\_real\_valid\_2000} & 2000 & 0 & 1981 & 19 & 0 & 0.9905 & 0.0000 & NaN & 0.9905 & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-5s} & \texttt{fma\_real\_valid\_2000} & 2000 & 0 & 1912 & 88 & 0 & 0.9560 & 0.0000 & NaN & 0.9560 & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-120s} & \texttt{fma\_real\_valid\_2000} & 2000 & 0 & 1940 & 60 & 0 & 0.9700 & 0.0000 & NaN & 0.9700 & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-5s} & \texttt{fma\_real\_valid\_2000} & 2000 & 0 & 1934 & 66 & 0 & 0.9670 & 0.0000 & NaN & 0.9670 & NaN \\
+\texttt{Deezer-specnn\_amplitude} & \texttt{sonics\_fake\_valid\_2000} & 2000 & 0 & 0 & 0 & 2000 & 0.0000 & NaN & 0.0000 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-120s} & \texttt{sonics\_fake\_valid\_2000} & 2000 & 1906 & 0 & 0 & 94 & 0.9530 & 1.0000 & 0.9530 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-5s} & \texttt{sonics\_fake\_valid\_2000} & 2000 & 1413 & 0 & 0 & 587 & 0.7065 & 1.0000 & 0.7065 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-120s} & \texttt{sonics\_fake\_valid\_2000} & 2000 & 1700 & 0 & 0 & 300 & 0.8500 & 1.0000 & 0.8500 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-5s} & \texttt{sonics\_fake\_valid\_2000} & 2000 & 1292 & 0 & 0 & 708 & 0.6460 & 1.0000 & 0.6460 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-120s} & \texttt{sonics\_fake\_valid\_2000} & 2000 & 1591 & 0 & 0 & 409 & 0.7955 & 1.0000 & 0.7955 & NaN & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-5s} & \texttt{sonics\_fake\_valid\_2000} & 2000 & 1275 & 0 & 0 & 725 & 0.6375 & 1.0000 & 0.6375 & NaN & NaN \\
+\texttt{Deezer-specnn\_amplitude} & \texttt{sonics\_real\_valid\_1243} & 1243 & 0 & 1243 & 0 & 0 & 1.0000 & NaN & NaN & 1.0000 & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-120s} & \texttt{sonics\_real\_valid\_1243} & 1243 & 0 & 1238 & 5 & 0 & 0.9960 & 0.0000 & NaN & 0.9960 & NaN \\
+\texttt{awsaf49/sonics-spectttra-alpha-5s} & \texttt{sonics\_real\_valid\_1243} & 1243 & 0 & 1164 & 79 & 0 & 0.9364 & 0.0000 & NaN & 0.9364 & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-120s} & \texttt{sonics\_real\_valid\_1243} & 1243 & 0 & 1235 & 8 & 0 & 0.9936 & 0.0000 & NaN & 0.9936 & NaN \\
+\texttt{awsaf49/sonics-spectttra-beta-5s} & \texttt{sonics\_real\_valid\_1243} & 1243 & 0 & 1170 & 73 & 0 & 0.9413 & 0.0000 & NaN & 0.9413 & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-120s} & \texttt{sonics\_real\_valid\_1243} & 1243 & 0 & 1219 & 24 & 0 & 0.9807 & 0.0000 & NaN & 0.9807 & NaN \\
+\texttt{awsaf49/sonics-spectttra-gamma-5s} & \texttt{sonics\_real\_valid\_1243} & 1243 & 0 & 1211 & 32 & 0 & 0.9743 & 0.0000 & NaN & 0.9743 & NaN \\
+\bottomrule
+\end{longtable}
+\normalsize
+\section{Confusion Matrices}
+Each subsection below contains the confusion matrix image for every model-dataset combination. Image files are loaded from \texttt{ood\_eval/confusion/}.
+\subsection{Dataset: \texttt{fakemusiccaps\_fake\_2000}}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fakemusiccaps_fake_2000__awsaf49_sonics-spectttra-alpha-120s.png}
+\caption{Dataset=\texttt{fakemusiccaps\_fake\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-120s}. TP=748, TN=0, FP=0, FN=1252, Accuracy=0.3740.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fakemusiccaps_fake_2000__awsaf49_sonics-spectttra-alpha-5s.png}
+\caption{Dataset=\texttt{fakemusiccaps\_fake\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-5s}. TP=252, TN=0, FP=0, FN=1748, Accuracy=0.1260.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fakemusiccaps_fake_2000__awsaf49_sonics-spectttra-beta-120s.png}
+\caption{Dataset=\texttt{fakemusiccaps\_fake\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-120s}. TP=63, TN=0, FP=0, FN=1937, Accuracy=0.0315.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fakemusiccaps_fake_2000__awsaf49_sonics-spectttra-beta-5s.png}
+\caption{Dataset=\texttt{fakemusiccaps\_fake\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-5s}. TP=148, TN=0, FP=0, FN=1852, Accuracy=0.0740.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fakemusiccaps_fake_2000__awsaf49_sonics-spectttra-gamma-120s.png}
+\caption{Dataset=\texttt{fakemusiccaps\_fake\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-120s}. TP=839, TN=0, FP=0, FN=1161, Accuracy=0.4195.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fakemusiccaps_fake_2000__awsaf49_sonics-spectttra-gamma-5s.png}
+\caption{Dataset=\texttt{fakemusiccaps\_fake\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-5s}. TP=187, TN=0, FP=0, FN=1813, Accuracy=0.0935.}
+\end{figure}
+\subsection{Dataset: \texttt{fakemusiccaps\_fake\_valid\_2000}}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fakemusiccaps_fake_valid_2000__Deezer-specnn_amplitude.png}
+\caption{Dataset=\texttt{fakemusiccaps\_fake\_valid\_2000}, Model=\texttt{Deezer-specnn\_amplitude}. TP=216, TN=0, FP=0, FN=1784, Accuracy=0.1080.}
+\end{figure}
+\subsection{Dataset: \texttt{fma\_fake\_valid\_2000}}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_fake_valid_2000__Deezer-specnn_amplitude.png}
+\caption{Dataset=\texttt{fma\_fake\_valid\_2000}, Model=\texttt{Deezer-specnn\_amplitude}. TP=1997, TN=0, FP=0, FN=3, Accuracy=0.9985.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_fake_valid_2000__awsaf49_sonics-spectttra-alpha-120s.png}
+\caption{Dataset=\texttt{fma\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-120s}. TP=142, TN=0, FP=0, FN=1858, Accuracy=0.0710.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_fake_valid_2000__awsaf49_sonics-spectttra-alpha-5s.png}
+\caption{Dataset=\texttt{fma\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-5s}. TP=74, TN=0, FP=0, FN=1926, Accuracy=0.0370.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_fake_valid_2000__awsaf49_sonics-spectttra-beta-120s.png}
+\caption{Dataset=\texttt{fma\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-120s}. TP=16, TN=0, FP=0, FN=1984, Accuracy=0.0080.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_fake_valid_2000__awsaf49_sonics-spectttra-beta-5s.png}
+\caption{Dataset=\texttt{fma\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-5s}. TP=65, TN=0, FP=0, FN=1935, Accuracy=0.0325.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_fake_valid_2000__awsaf49_sonics-spectttra-gamma-120s.png}
+\caption{Dataset=\texttt{fma\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-120s}. TP=78, TN=0, FP=0, FN=1922, Accuracy=0.0390.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_fake_valid_2000__awsaf49_sonics-spectttra-gamma-5s.png}
+\caption{Dataset=\texttt{fma\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-5s}. TP=74, TN=0, FP=0, FN=1926, Accuracy=0.0370.}
+\end{figure}
+\subsection{Dataset: \texttt{fma\_real\_valid\_2000}}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_real_valid_2000__Deezer-specnn_amplitude.png}
+\caption{Dataset=\texttt{fma\_real\_valid\_2000}, Model=\texttt{Deezer-specnn\_amplitude}. TP=0, TN=1998, FP=2, FN=0, Accuracy=0.9990.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_real_valid_2000__awsaf49_sonics-spectttra-alpha-120s.png}
+\caption{Dataset=\texttt{fma\_real\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-120s}. TP=0, TN=1915, FP=85, FN=0, Accuracy=0.9575.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_real_valid_2000__awsaf49_sonics-spectttra-alpha-5s.png}
+\caption{Dataset=\texttt{fma\_real\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-5s}. TP=0, TN=1937, FP=63, FN=0, Accuracy=0.9685.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_real_valid_2000__awsaf49_sonics-spectttra-beta-120s.png}
+\caption{Dataset=\texttt{fma\_real\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-120s}. TP=0, TN=1981, FP=19, FN=0, Accuracy=0.9905.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_real_valid_2000__awsaf49_sonics-spectttra-beta-5s.png}
+\caption{Dataset=\texttt{fma\_real\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-5s}. TP=0, TN=1912, FP=88, FN=0, Accuracy=0.9560.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_real_valid_2000__awsaf49_sonics-spectttra-gamma-120s.png}
+\caption{Dataset=\texttt{fma\_real\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-120s}. TP=0, TN=1940, FP=60, FN=0, Accuracy=0.9700.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/fma_real_valid_2000__awsaf49_sonics-spectttra-gamma-5s.png}
+\caption{Dataset=\texttt{fma\_real\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-5s}. TP=0, TN=1934, FP=66, FN=0, Accuracy=0.9670.}
+\end{figure}
+\subsection{Dataset: \texttt{sonics\_fake\_valid\_2000}}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_fake_valid_2000__Deezer-specnn_amplitude.png}
+\caption{Dataset=\texttt{sonics\_fake\_valid\_2000}, Model=\texttt{Deezer-specnn\_amplitude}. TP=0, TN=0, FP=0, FN=2000, Accuracy=0.0000.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_fake_valid_2000__awsaf49_sonics-spectttra-alpha-120s.png}
+\caption{Dataset=\texttt{sonics\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-120s}. TP=1906, TN=0, FP=0, FN=94, Accuracy=0.9530.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_fake_valid_2000__awsaf49_sonics-spectttra-alpha-5s.png}
+\caption{Dataset=\texttt{sonics\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-alpha-5s}. TP=1413, TN=0, FP=0, FN=587, Accuracy=0.7065.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_fake_valid_2000__awsaf49_sonics-spectttra-beta-120s.png}
+\caption{Dataset=\texttt{sonics\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-120s}. TP=1700, TN=0, FP=0, FN=300, Accuracy=0.8500.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_fake_valid_2000__awsaf49_sonics-spectttra-beta-5s.png}
+\caption{Dataset=\texttt{sonics\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-beta-5s}. TP=1292, TN=0, FP=0, FN=708, Accuracy=0.6460.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_fake_valid_2000__awsaf49_sonics-spectttra-gamma-120s.png}
+\caption{Dataset=\texttt{sonics\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-120s}. TP=1591, TN=0, FP=0, FN=409, Accuracy=0.7955.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_fake_valid_2000__awsaf49_sonics-spectttra-gamma-5s.png}
+\caption{Dataset=\texttt{sonics\_fake\_valid\_2000}, Model=\texttt{awsaf49/sonics-spectttra-gamma-5s}. TP=1275, TN=0, FP=0, FN=725, Accuracy=0.6375.}
+\end{figure}
+\subsection{Dataset: \texttt{sonics\_real\_valid\_1243}}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_real_valid_1243__Deezer-specnn_amplitude.png}
+\caption{Dataset=\texttt{sonics\_real\_valid\_1243}, Model=\texttt{Deezer-specnn\_amplitude}. TP=0, TN=1243, FP=0, FN=0, Accuracy=1.0000.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_real_valid_1243__awsaf49_sonics-spectttra-alpha-120s.png}
+\caption{Dataset=\texttt{sonics\_real\_valid\_1243}, Model=\texttt{awsaf49/sonics-spectttra-alpha-120s}. TP=0, TN=1238, FP=5, FN=0, Accuracy=0.9960.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_real_valid_1243__awsaf49_sonics-spectttra-alpha-5s.png}
+\caption{Dataset=\texttt{sonics\_real\_valid\_1243}, Model=\texttt{awsaf49/sonics-spectttra-alpha-5s}. TP=0, TN=1164, FP=79, FN=0, Accuracy=0.9364.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_real_valid_1243__awsaf49_sonics-spectttra-beta-120s.png}
+\caption{Dataset=\texttt{sonics\_real\_valid\_1243}, Model=\texttt{awsaf49/sonics-spectttra-beta-120s}. TP=0, TN=1235, FP=8, FN=0, Accuracy=0.9936.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_real_valid_1243__awsaf49_sonics-spectttra-beta-5s.png}
+\caption{Dataset=\texttt{sonics\_real\_valid\_1243}, Model=\texttt{awsaf49/sonics-spectttra-beta-5s}. TP=0, TN=1170, FP=73, FN=0, Accuracy=0.9413.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_real_valid_1243__awsaf49_sonics-spectttra-gamma-120s.png}
+\caption{Dataset=\texttt{sonics\_real\_valid\_1243}, Model=\texttt{awsaf49/sonics-spectttra-gamma-120s}. TP=0, TN=1219, FP=24, FN=0, Accuracy=0.9807.}
+\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.58\textwidth]{confusion/sonics_real_valid_1243__awsaf49_sonics-spectttra-gamma-5s.png}
+\caption{Dataset=\texttt{sonics\_real\_valid\_1243}, Model=\texttt{awsaf49/sonics-spectttra-gamma-5s}. TP=0, TN=1211, FP=32, FN=0, Accuracy=0.9743.}
+\end{figure}
+\section{Interpretation Notes}
+\begin{itemize}
+\item On fake-only datasets, specificity (\texttt{spec\_real}) is undefined because there are no real samples.
+\item On real-only datasets, fake recall is undefined because there are no fake samples.
+\item Balanced accuracy is reported only when both class recalls are defined.
+\end{itemize}
+\end{document}
