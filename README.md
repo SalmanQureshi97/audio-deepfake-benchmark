@@ -1,6 +1,5 @@
 # OOD Audio Deepfake Benchmark
 
-<<<<<<< HEAD
 This repository contains the code used to generate leakage-safe OOD evaluation splits and benchmark results for:
 
 - Deezer Deepfake Detector (`specnn_amplitude`)
@@ -17,7 +16,6 @@ Datasets used:
 Reproducible out-of-domain benchmark pipeline for evaluating Deezer’s deepfake detector and SONICS SpecTTTra models on FMA, FakeMusicCaps, and SONICS with leakage-safe validation splits, standardized manifests, and confusion-matrix reporting.
 
 ## What This Folder Includes
->>>>>>> 6b8fee5 (initial commit)
 
 - Split generation scripts
 - Evaluation orchestration scripts
@@ -25,11 +23,8 @@ Reproducible out-of-domain benchmark pipeline for evaluating Deezer’s deepfake
 - Confusion matrix generation
 - Final comparison CSV outputs
 
-<<<<<<< HEAD
 This repo does **not** host dataset audio or model checkpoints.
-=======
 This folder does **not** contain dataset audio or model checkpoints.
->>>>>>> 6b8fee5 (initial commit)
 
 ---
 
@@ -179,5 +174,3 @@ python ood_eval/plot_confusion_matrices.py \
 - SONICS predictions: `ood_eval/preds/sonics/.../test_predictions.csv`
 - Final metrics: `ood_eval/final_ood_comparison.csv`
 - Confusion matrices: `ood_eval/confusion/*.png`
-
->>>>>>> 6b8fee5 (initial commit)
